@@ -1,13 +1,13 @@
 from django.db import models
 from admin import models
-from admin.models import Students,Staff
+from admin.models import Student,Staff
 
 
 # Create your models here.
 
 
 class Proctor(models.Model):
-    employee_code = models.ForeignKey(Staff, Students, on_delete=models.CASCADE)
+    employee_code = models.ForeignKey(Staff, Student, on_delete=models.CASCADE)
     
         
     # dept = models.CharField(max_length=15, blank=False, null=False)
@@ -19,9 +19,9 @@ class Proctor(models.Model):
     # post = models.CharField(max_length=15, blank=False, null=False)
 
 class registered_students:
-    proctor_abr = models.ForeignKey(Proctor, on_delete=models.CASCADE)
-    roll_no = models.ForeignKey(Student, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, blank=False, null=False)
-    dept = models.CharField(max_length=15, blank=False, null=False)
+    Proctor_abr = models.ForeignKey(Proctor, on_delete=models.CASCADE)
+    Roll_no = models.ForeignKey(Student, on_delete=models.CASCADE)
+    Name = models.CharField(max_length=100, blank=False, null=False)
+    Dept = models.CharField(max_length=15, blank=False, null=False)
     
     
