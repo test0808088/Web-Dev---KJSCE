@@ -38,7 +38,7 @@ class Student(models.Model):
     student_name = models.CharField(max_length=100)
     Roll_number=models.PositiveBigIntegerField()
     email=models.EmailField(max_length=100)
-    Proctor_Abbreviation = models.ForeignKey(Faculty,on_delete=models.CASCADE)
+    Proctor_Abbreviation = models.ForeignKey(Faculty,on_delete=models.CASCADE,to_field='Employee_abbreviation')
     Student_contact_no=models.CharField(max_length=20)
     Parents_contact_no=models.CharField(max_length=20)
     Parent_email_id=models.EmailField(max_length=100)
@@ -56,9 +56,9 @@ class Course(models.Model):
 class Year(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     Year= models.CharField(max_length=20)
-    Faculty_name=models.ForeignKey(Faculty, on_delete=models.CASCADE)
-    Staff_name=models.ForeignKey(Staff,on_delete=models.CASCADE)
-    Course_code=models.ForeignKey(Course,on_delete=models.CASCADE)
+    Faculty_name=models.ForeignKey(Faculty, on_delete=models.CASCADE,to_field='Employee_Abbreviation')
+    Staff_name=models.ForeignKey(Staff,on_delete=models.CASCADE,to_field='Employee_Abbreviation')
+    Course_code=models.ForeignKey(Course,on_delete=models.CASCADE,to_field='course_code')
     
 
 
