@@ -1,5 +1,7 @@
 from django.db import models
 from admin import models
+from admin.models import Students,Staff
+
 
 # Create your models here.
 
@@ -18,7 +20,7 @@ class Proctor(models.Model):
 
 class registered_students:
     proctor_abr = models.ForeignKey(Proctor, on_delete=models.CASCADE)
-    roll_no = models.ForeignKey(Students, on_delete=models.CASCADE)
+    roll_no = models.ForeignKey(Student, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=False, null=False)
     dept = models.CharField(max_length=15, blank=False, null=False)
     
