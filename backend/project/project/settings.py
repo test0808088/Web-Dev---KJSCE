@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'admin'
-    'proctor'
+    'user_handler',
 ]
 
 MIDDLEWARE = [
