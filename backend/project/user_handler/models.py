@@ -10,8 +10,6 @@ class Branch(models.Model):
     ]
     
     branch_name = models.CharField(max_length=50, choices=branch_choices, unique=True)
-    
-  
 
 class Faculty(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
