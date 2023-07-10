@@ -2,43 +2,45 @@ from django.db import models
 
 class Branch(models.Model):
     branch_choices = [
-        ('comps', 'Computer Science'),
-        ('it', 'Information Technology'),
-        ('extc', 'Electronics and Telecommunication'),
-        ('etrx', 'Electronics'),
-        ('mech', 'Mechanical'),
+        ('Comps', 'Computer Science'),
+        ('IT', 'Information Technology'),
+        ('EXTC', 'Electronics and Telecommunication'),
+        ('ETRX', 'Electronics'),
+        ('MECH', 'Mechanical'),
     ]
     
     branch_name = models.CharField(max_length=50, choices=branch_choices, unique=True)
+    def __str__(self):
+        return str(self.branch_name)
     
   
 
-class Faculty(models.Model):
+class faculty(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    Dept=models.CharField(max_length=100)
-    Employee_code = models.CharField(max_length=100)
-    Faculty_name = models.CharField(max_length=100)
-    Employee_Abbreviation = models.CharField(max_length=20,primary_key=True)
-    Faculty_email = models.EmailField(max_length=100)
-    Experience=models.PositiveIntegerField()
-    Post=models.CharField(max_length=100)
+    dept=models.CharField(max_length=100)
+    employee_code = models.PositiveIntegerField()
+    faculty_name = models.CharField(max_length=100)
+    employee_abbreviation = models.CharField(max_length=20,primary_key=True)
+    faculty_email = models.EmailField(max_length=100)
+    experience=models.PositiveIntegerField()
+    post=models.CharField(max_length=100)
 
-class Staff(models.Model):
+class staff(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    Dept=models.CharField(max_length=100)
-    Employee_code = models.CharField(max_length=100)
+    dept=models.CharField(max_length=100)
+    employee_code = models.PositiveIntegerField()
     staff_name = models.CharField(max_length=100)
-    Employee_Abbreviation = models.CharField(max_length=20,primary_key=True)
-    Staff_email = models.EmailField(max_length=100)
-    Experience=models.PositiveIntegerField()
-    Post=models.CharField(max_length=100)
+    employee_abbreviation = models.CharField(max_length=20,primary_key=True)
+    staff_email = models.EmailField(max_length=100)
+    experience=models.PositiveIntegerField()
+    post=models.CharField(max_length=100)
 
 class Student(models.Model):
     student_branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     student_name = models.CharField(max_length=100)
     Roll_number=models.PositiveBigIntegerField()
     email=models.EmailField(max_length=100)
-    Proctor_Abbreviation = models.ForeignKey(Faculty,on_delete=models.CASCADE,to_field='Employee_Abbreviation')
+    Proctor_Abbreviation = models.ForeignKey(faculty,on_delete=models.CASCADE,to_field='employee_abbreviation')
     Student_contact_no=models.CharField(max_length=20)
     Parents_contact_no=models.CharField(max_length=20)
     Parent_email_id=models.EmailField(max_length=100)
@@ -56,8 +58,8 @@ class Course(models.Model):
 class Year(models.Model):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     Year= models.CharField(max_length=4)
-    Faculty_name=models.ForeignKey(Faculty, on_delete=models.CASCADE,to_field='Employee_Abbreviation')
-    Staff_name=models.ForeignKey(Staff,on_delete=models.CASCADE,to_field='Employee_Abbreviation')
+    Faculty_name=models.ForeignKey(faculty, on_delete=models.CASCADE,to_field='employee_abbreviation')
+    Staff_name=models.ForeignKey(staff,on_delete=models.CASCADE,to_field='employee_abbreviation')
     Course_code=models.ForeignKey(Course,on_delete=models.CASCADE,to_field='course_code')
 
 
