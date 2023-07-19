@@ -25,3 +25,12 @@ class staffViewSet(viewsets.ModelViewSet):
         staff = models.staff.objects.all()
         serializer = serializers.staff_serializer(staff, data = request.data)
         return Response(serializer.data)
+    
+class studentViewSet(viewsets.ModelViewSet):
+    queryset = models.Student.objects.all()
+    serializer_class = serializers.Student_serializer
+
+    def put(self, request, id=None):
+        student = models.Student.objects.all()
+        serializer = serializers.Student_serializer(student, data = request.data)
+        return Response(serializer.data)

@@ -11,3 +11,9 @@ class staff_serializer(serializers.ModelSerializer):
     class Meta:
         model = models.staff
         fields = '__all__'
+
+class Student_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Student
+        fields = '__all__'
+        depth = 1
