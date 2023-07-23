@@ -1,0 +1,39 @@
+.records-container {
+    margin: 20px;
+  }
+  
+  .records-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .records-table th,
+  .records-table td {
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
+  
+  .records-table th {
+    background-color: #f0f0f0;
+  }
+  
+  .records-table th,
+  .records-table td:nth-child(2),
+  .records-table td:nth-child(3),
+  .records-table td:nth-child(14) {
+    text-align: center;
+  }
+  
+  .records-table th:first-child {
+    width: 50px;
+  }
+  
+  .records-table th:nth-child(2),
+  .records-table th:nth-child(3) {
+    width: 120px;
+  }
+  
+  .records-table td:nth-child(n + 4):nth-child(-n + 12) {
+    text-align: center;
+  }
+  

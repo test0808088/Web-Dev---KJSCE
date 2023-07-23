@@ -1,0 +1,68 @@
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    background-color: #f0f0f0; /* Customize the background color for the footer */
+    padding: 20px;
+  }
+  
+  .column {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    margin: 10px;
+    text-align: center;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; Center-align the subtopics in smaller view */
+  }
+  
+  .column h4 {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .logoImage {
+    width: 150px; /* Customize the logo size */
+    height: auto;
+  }
+
+ 
+  
+  /* For responsiveness - adjust the number of columns based on screen width */
+  @media screen and (max-width: 768px) {
+    .footer {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .column {
+      max-width: 100%; /* Expand the columns to full width in mobile view */
+      margin: 10px 0;
+      text-align: center; /* Center-align the headers in mobile view */
+    }
+    
+    .column h4 {
+      text-align: center; /* Center-align the headers in mobile view */
+    }
+  }
+
+   .followUsOnColumn p{
+    display: inline;
+    margin-right: 10px; /* Add some spacing between the subtopics in desktop view */
+    cursor: pointer;
+  }
+  
+
+  .followUsOnColumn p svg {
+    margin-right: 5px;
+    transition: transform 0.2s ease, fill 0.2s ease;
+    font-size: 30px;
+  }
+  
+  .followUsOnColumn p:hover svg {
+    transform: scale(1.8); /* Increase the size on hover */
+    fill: #007bff; /* Change the color on hover (blue color as an example) */
+  }
+
+  
