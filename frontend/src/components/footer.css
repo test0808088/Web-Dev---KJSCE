@@ -2,7 +2,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    background-color: #f0f0f0; /* Customize the background color for the footer */
+    background-color: #f0f0f0; 
     padding: 20px;
   }
   
@@ -23,13 +23,13 @@
   }
   
   .logoImage {
-    width: 150px; /* Customize the logo size */
+    width: 150px;
     height: auto;
   }
 
  
   
-  /* For responsiveness - adjust the number of columns based on screen width */
+  
   @media screen and (max-width: 768px) {
     .footer {
       flex-direction: column;
@@ -37,19 +37,19 @@
     }
     
     .column {
-      max-width: 100%; /* Expand the columns to full width in mobile view */
+      max-width: 100%; 
       margin: 10px 0;
-      text-align: center; /* Center-align the headers in mobile view */
+      text-align: center; 
     }
     
     .column h4 {
-      text-align: center; /* Center-align the headers in mobile view */
+      text-align: center; 
     }
   }
 
    .followUsOnColumn p{
     display: inline;
-    margin-right: 10px; /* Add some spacing between the subtopics in desktop view */
+    margin-right: 10px;
     cursor: pointer;
   }
   
@@ -61,8 +61,8 @@
   }
   
   .followUsOnColumn p:hover svg {
-    transform: scale(1.8); /* Increase the size on hover */
-    fill: #007bff; /* Change the color on hover (blue color as an example) */
+    transform: scale(1.8); 
+    fill: #007bff; 
   }
 
   

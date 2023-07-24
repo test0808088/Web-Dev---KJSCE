@@ -5,6 +5,7 @@
   .records-table {
     width: 100%;
     border-collapse: collapse;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   }
   
   .records-table th,
@@ -14,8 +15,25 @@
   }
   
   .records-table th {
-    background-color: #f0f0f0;
+    background-color: #941919; 
+    color: white; 
+    
   }
+
+  .records-table th:nth-child(4),
+.records-table th:nth-child(5),
+.records-table td:nth-child(4),
+.records-table td:nth-child(5) {
+  text-align: center;
+  width: 50px; 
+}
+
+.records-table th:nth-child(2),
+.records-table th:nth-child(3),
+.records-table td:nth-child(2),
+.records-table td:nth-child(3) {
+  width: 150px; 
+}
   
   .records-table th,
   .records-table td:nth-child(2),
@@ -28,10 +46,10 @@
     width: 50px;
   }
   
-  .records-table th:nth-child(2),
+  /* .records-table th:nth-child(2),
   .records-table th:nth-child(3) {
     width: 120px;
-  }
+  } */
   
   .records-table td:nth-child(n + 4):nth-child(-n + 12) {
     text-align: center;
