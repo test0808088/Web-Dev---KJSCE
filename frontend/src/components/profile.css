@@ -1,0 +1,43 @@
+
+.profile-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    height: 100vh; 
+    
+  }
+
+  .profile-subcontainer{
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: 300px;
+  padding: 20px;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
+  transform-style: preserve-3d; 
+  transition: transform 0.3s ease;
+  }
+  .profile-subcontainer:hover {
+    transform: translateY(-5px); 
+  }
+  .user-section {
+    display: flex;
+    align-items: center; 
+  }
+  
+  .user-icon {
+    margin-left: 40px; 
+  }
+  .vertical-line {
+    flex: 1;
+    height: 85%;
+    border-right: 2px solid #ccc;
+    margin: 0 20px;
+  }
+  .user-details {
+    flex: 3;
+  }
+  

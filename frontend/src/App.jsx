@@ -1,14 +1,24 @@
 import React from "react"
-import Navbar from "./components/Navbar"
-import Footer from "./components/Footer"
-import Records from "./components/Records"
+import StudentPage from "./pages/studentPage"
+import AchievementsPage from "./pages/achievementsPage";
+import ProfilePage from "./pages/Profile";
+import { BrowserRouter,Route,Routes } from "react-router-dom";
+
+
+
 function App() {
 
   return (
     <>
-      <Navbar/>
-      <Records/>
-      <Footer/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/student" element={<StudentPage/>} />
+          <Route path="/achievement" element={<AchievementsPage/>}/>
+          <Route path="/profile" element={<ProfilePage/>}/>
+
+        </Routes>
+      </BrowserRouter>
+      
     </>
   )
 }
