@@ -1,15 +1,15 @@
 import React from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import Records from "../components/Records";
+import Navbar from "../components/navbar/Navbar";
+import Footer from "../components/footer/Footer";
+import Records from "../components/studentRecords/Records";
 function StudentPage(){
     return(
         <>
-            <Navbar/>
+            <Navbar showAchievementsButton={true}/>
             <Records/>
             <Footer/>
         </>
     )
 }
 
-export default StudentPage
+export default StudentPage  

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser,faBars } from '@fortawesome/free-solid-svg-icons';
 import { useState,useRef } from 'react';
 
-const Navbar = () => {
+const Navbar = ({ showAchievementsButton }) => {
     const [menuOpen,setMenuOpen]=useState(false)
   return (
     <nav className="navbar">
@@ -25,7 +25,7 @@ const Navbar = () => {
 
       </div>
       <ul className= {menuOpen?"open":"navLinks"}>
-        <li className="navItem achievementsButton">Achievements</li>
+      {showAchievementsButton &&<li className="navItem achievementsButton">Achievements</li>}
         <li className="navItem profileButton"><FontAwesomeIcon className="user-icon" icon={faUser} />My Profile</li>
         <li className="navItem logoutLink">Logout</li>
       </ul>

@@ -1,17 +1,15 @@
 import React from "react";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
-import Profile from "../components/studentProfile/Profile";
 
-
-function ProfilePage(){
+function FacultyPage(){
     return(
         <>
-            <Navbar showAchievementsButton={true}/>
-            <Profile/>
+            <Navbar showAchievementsButton={false}/>
+            Faculty
             <Footer/>
         </>
     )
 }
 
-export default ProfilePage
+export default FacultyPage
