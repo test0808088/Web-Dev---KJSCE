@@ -37,8 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-
     'rest_framework',
     'user_handler',
     'excel_impex',
@@ -126,3 +124,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# MEDIA_ROOT = "E:/KJSCE INTERNSHIP/Web-Dev---KJSCE/backend/project/user_handler/media"
+# MEDIA_URLS = "/media/"

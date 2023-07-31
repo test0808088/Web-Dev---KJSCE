@@ -2,18 +2,31 @@ from rest_framework import serializers
 from . import models
 from django.contrib.auth import get_user_model
 
-class faculty_serializer(serializers.ModelSerializer):
+class FacultySerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.faculty
+        model = models.Faculty
         fields = '__all__'
 
-class staff_serializer(serializers.ModelSerializer):
+class StaffSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.staff
+        model = models.Staff
         fields = '__all__'
 
-class Student_serializer(serializers.ModelSerializer):
+class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Student
         fields = '__all__'
         depth = 1
+
+class StudentPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Student
+        fields = '__all__'
+        
+
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = '__all__'

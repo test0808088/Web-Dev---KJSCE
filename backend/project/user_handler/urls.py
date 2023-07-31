@@ -3,12 +3,14 @@ from user_handler import views
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
+router.register('faculty', views.FacultyViewSet, basename='faculty')
+router.register('staff', views.StaffViewSet, basename='staff')
+router.register('student', views.StudentViewSet, basename='student')
+router.register('course', views.CourseViewSet, basename='course')
 
-router.register('faculty', views.facultyViewSet, basename='fauclty')
-router.register('staff', views.staffViewSet, basename='staff')
-router.register('student', views.studentViewSet, basename='student')    
 
 urlpatterns = [
     path('', include(router.urls)),
-    # path('', views.facultyViewSet.as_view()),
+    path('download-csv/<str:model>/', views.DownloadCSV.as_view(), name='download-csv'),
+    
 ]
