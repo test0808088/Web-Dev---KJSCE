@@ -31,44 +31,47 @@ class FacultyViewSet(viewsets.ViewSet):
 
             for row in csv_data:
                 
-                branch = row[0]
-                dept = row[1]
-                employee_code = int(row[2])
+                dept = row[0]
+                employee_code = int(row[1])
+                faculty_abbreviation = row[2]
                 faculty_name = row[3]
-                employee_abbreviation = row[4]
-                faculty_email = row[5]
-                experience = int(row[6])
-                post = row[7]
+                faculty_email = row[4]
+                experience = int(row[5])
+                post = row[6]
+                mobile_number = row[7]
                 
                 try:
-                    faculty_instance = models.Faculty.objects.get(employee_abbreviation=employee_abbreviation)
+                    faculty_instance = models.Faculty.objects.get(faculty_abbreviation=faculty_abbreviation)
                 except models.Faculty.DoesNotExist:
                     faculty_instance = None
 
                 if faculty_instance:
                     
                     serializer = serializers.FacultySerializer(faculty_instance, data={
-                        'branch': branch,
-                        'dept': dept,
-                        'employee_code': employee_code,
-                        'faculty_name': faculty_name,
-                        'faculty_email': faculty_email,
-                        'experience': experience,
-                        'post': post,
+                        
+                        'dept' : dept,
+                        'employee_code' : employee_code,
+                        'faculty_name' : faculty_name,
+                        'faculty_email' : faculty_email,
+                        'experience' : experience,
+                        'post' : post,
+                        'mobile_number' : mobile_number,
+   
                         
                     }, partial=True)
                 else:
                     
                     serializer = serializers.FacultySerializer(data={
-                        'branch': branch,
-                        'dept': dept,
-                        'employee_code': employee_code,
-                        'faculty_name': faculty_name,
-                        'employee_abbreviation': employee_abbreviation,
-                        'faculty_email': faculty_email,
-                        'experience': experience,
-                        'post': post,
                         
+                        'dept' : dept,
+                        'employee_code' : employee_code,
+                        'faculty_abbreviation' : faculty_abbreviation,
+                        'faculty_name' : faculty_name,
+                        'faculty_email' : faculty_email,
+                        'experience' : experience,
+                        'post' : post,
+                        'mobile_number' : mobile_number,
+                          
                     })
 
                 if serializer.is_valid():
@@ -111,44 +114,46 @@ class StaffViewSet(viewsets.ViewSet):
 
             for row in csv_data:
 
-                branch = row[0]
-                dept = row[1]
-                employee_code = int(row[2])
+                dept = row[0]
+                employee_code = int(row[1])
+                staff_abbreviation = row[2]
                 staff_name = row[3]
-                employee_abbreviation = row[4]
-                staff_email = row[5]
-                experience = int(row[6])
-                post = row[7]
-                
+                staff_email = row[4]
+                experience = int(row[5])
+                post = row[6]
+                mobile_number = row[7]
+
                 try:
-                    staff_instance = models.Staff.objects.get(employee_abbreviation=employee_abbreviation)
+                    staff_instance = models.Staff.objects.get(staff_abbreviation=staff_abbreviation)
                 except models.Staff.DoesNotExist:
                     staff_instance = None
 
                 if staff_instance:
                     
                     serializer = serializers.StaffSerializer(staff_instance, data={
-                        'branch': branch,
-                        'dept': dept,
-                        'employee_code': employee_code,
-                        'staff_name': staff_name,
-                        'staff_email': staff_email,
-                        'experience': experience,
-                        'post': post,
                         
+                        'dept' : dept,
+                        'employee_code' : employee_code,
+                        'staff_name' : faculty_name,
+                        'staff_email' : faculty_email,
+                        'experience' : experience,
+                        'post' : post,
+                        'mobile_number' : mobile_number,
+                           
                     }, partial=True)
                 else:
                     
                     serializer = serializers.StaffSerializer(data={
-                        'branch': branch,
-                        'dept': dept,
-                        'employee_code': employee_code,
-                        'staff_name': staff_name,
-                        'employee_abbreviation': employee_abbreviation,
-                        'staff_email': staff_email,
-                        'experience': experience,
-                        'post': post,
                         
+                        'dept' : dept,
+                        'employee_code' : employee_code,
+                        'staff_abbreviation' : staff_abbreviation,
+                        'staff_name' : staff_name,
+                        'staff_email' : staff_email,
+                        'experience' : experience,
+                        'post' : post,
+                        'mobile_number' : mobile_number,
+    
                     })
 
                 if serializer.is_valid():
@@ -275,11 +280,10 @@ class CourseViewSet(viewsets.ViewSet):
                 branch = row[0]
                 course_code = row[1]
                 course_name = row[2]
-                dept = row[3]
-                sem = row[4]
-                scheme_name = row[5]
-                credit = row[6]
-                hours = row[7]
+                sem = row[3]
+                scheme_name = row[4]
+                credit = row[5]
+                hours = row[6]
                 
                 try:
                     course_instance = models.Course.objects.get(course_code=course_code)
@@ -291,9 +295,7 @@ class CourseViewSet(viewsets.ViewSet):
                     serializer = serializers.CourseSerializer(course_instance, data={
                         
                         'branch' : branch,
-                        'course_code' : course_code,
                         'course_name' : course_name,
-                        'dept' : dept,
                         'sem' : sem,
                         'scheme_name' : scheme_name,
                         'credit' : credit,
@@ -303,15 +305,15 @@ class CourseViewSet(viewsets.ViewSet):
                 else:
                     
                     serializer = serializers.CourseSerializer(data={
+                        
                         'branch' : branch,
                         'course_code' : course_code,
                         'course_name' : course_name,
-                        'dept' : dept,
                         'sem' : sem,
                         'scheme_name' : scheme_name,
                         'credit' : credit,
                         'hours' : hours,
-                        
+ 
                     })
 
                 if serializer.is_valid():
@@ -331,6 +333,77 @@ class CourseViewSet(viewsets.ViewSet):
             return Response({"message": "Course not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
+class CourseAllotmentViewSet(viewsets.ViewSet):
+    def list(self, request):
+        courses_allotments = models.CourseAllotment.objects.all()
+        serializer = serializers.CourseAllotmentSerializer(courses_allotments, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        try:
+            course_allotment_instance = models.CourseAllotment.objects.get(pk=pk)
+            serializer = serializers.CourseAllotmentSerializer(course_allotment_instance)
+            return Response(serializer.data)
+        except models.CourseAllotment.DoesNotExist:
+            return Response({"message": "Course Allotment not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    def create(self, request):
+        file = request.FILES.get('file')
+        if file:
+           
+            csv_data = csv.reader(TextIOWrapper(file, encoding='utf-8'))
+            next(csv_data, None)
+
+            for row in csv_data:
+
+                course_code= row[0]
+                course_name= row[1]
+                faculty_abbreviation= row[2]
+                staff_abbreviation= row[3]
+                
+                try:
+                    course_allotment_instance = models.CourseAllotment.objects.get(course_code=course_code)
+                except models.CourseAllotment.DoesNotExist:
+                    course_allotment_instance = None
+
+                if course_allotment_instance:
+                    
+                    serializer = serializers.CourseAllotmentSerializer(course_allotment_instance, data={
+                        
+                        'course_name': course_name,
+                        'faculty_abbreviation': faculty_abbreviation,
+                        'staff_abbreviation': staff_abbreviation,
+   
+                    }, partial=True)
+                else:
+                    serializer = serializers.CourseAllotmentSerializer(data={
+                        
+                        'course_code': course_code,
+                        'course_name': course_name,
+                        'faculty_abbreviation': faculty_abbreviation,
+                        'staff_abbreviation': staff_abbreviation,
+                           
+                    })
+
+                if serializer.is_valid():
+                    serializer.save()
+
+            return Response({"message": "CSV data added to Course Allotment models successfully."}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message": "No file uploaded."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def destroy(self, request, pk=None):
+        try:
+            course_allotment_instance = models.CourseAllotment.objects.get(pk=pk)
+            course_allotment_instance.delete()
+            return Response({"message": "Course  Allotment deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except models.CourseAllotment.DoesNotExist:
+            return Response({"message": "Course Allotment not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
 class DownloadCSV(APIView):
 
     allowed_methods = ['GET', 'POST']
@@ -348,6 +421,9 @@ class DownloadCSV(APIView):
         elif model == 'Course':
             queryset = models.Course.objects.none()  
             serializer_class = serializers.CourseSerializer
+        elif model == 'CourseAllotment':
+            queryset = models.CourseAllotment.objects.none()
+            serializer_class = serializers.CourseAllotmentSerializer
         else:
             return Response({'message': 'Invalid model name.'}, status=400)
 
@@ -356,11 +432,11 @@ class DownloadCSV(APIView):
 
         serializer = serializer_class(queryset, many=True)
 
-        field_names = ['branch', 'dept', 'employee_code', 'faculty_name', 'employee_abbreviation',
-                       'faculty_email', 'experience', 'post'] if model == 'Faculty' else ['branch', 'dept', 'employee_code', 'staff_name', 'employee_abbreviation',
-                       'staff_email', 'experience', 'post'] if model == 'Staff' else ['student_branch', 'student_name', 'roll_number', 'email', 'proctor_abbreviation',
-                       'student_contact_no', 'parents_contact_no', 'parent_email_id'] if model == 'Student' else ['branch', 'course_code', 'course_name', 'dept', 'sem',
-                       'scheme_name', 'credit', 'hours'] if model == 'Course' else []
+        field_names = ['dept', 'employee_code', 'faculty_abbreviation', 'faculty_name',
+                       'faculty_email', 'experience', 'post', 'mobile_number'] if model == 'Faculty' else ['dept', 'employee_code', 'staff_abbreviation', 'staff_name',
+                       'staff_email', 'experience', 'post', 'mobile_number'] if model == 'Staff' else ['student_branch', 'student_name', 'roll_number', 'email', 'proctor_abbreviation',
+                       'student_contact_no', 'parents_contact_no', 'parent_email_id'] if model == 'Student' else ['branch', 'course_code', 'course_name', 'sem',
+                       'scheme_name', 'credit', 'hours'] if model == 'Course' else ['course_code', 'course_name', 'faculty_abbreviation', 'staff_abbreviation'] if model == 'CourseAllotment' else []
 
         writer = csv.DictWriter(response, fieldnames=field_names)
         writer.writeheader()

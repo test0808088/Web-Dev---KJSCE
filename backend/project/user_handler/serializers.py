@@ -23,10 +23,33 @@ class StudentPostSerializer(serializers.ModelSerializer):
         model = models.Student
         fields = '__all__'
         
-
-
-
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Course
+        fields = '__all__'
+
+class CourseAllotmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CourseAllotment
+        fields = '__all__'
+
+class StudentAchievementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.StudentAchievement
+        fields = '__all__'
+
+class AdminCredentialsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AdminCredentials
+        fields = '__all__'
+
+class SubAdminCredentialsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.SubAdminCredentials
+        fields = '__all__'
+
+
+class AcademicYearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AcademicYear
         fields = '__all__'
