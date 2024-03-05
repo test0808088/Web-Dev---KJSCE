@@ -7,6 +7,7 @@ import csv
 from . import serializers
 from . import models
 from rest_framework.views import APIView
+from django.core.files.storage import FileSystemStorage
 
 class FacultyViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -204,6 +205,24 @@ class StudentViewSet(viewsets.ViewSet):
                 student_contact_no = row[5]
                 parents_contact_no = row[6]
                 parent_email_id = row[7]
+                year = row[8]
+                session = row[9]
+                course_1 = row[10]
+                course_2 = row[11]
+                course_3 = row[12]
+                course_4 = row[13]
+                course_5 = row[14]
+                course_6 = row[15]
+                course_7 = row[16]
+                course_8 = row[17]
+                course_9 = row[18]
+                course_10 = row[19]
+                course_11 = row[20]
+                course_12 = row[21]
+                course_13 = row[22]
+                course_14 = row[23]
+                course_15 = row[24]
+
                 
                 try:
                     student_instance = models.Student.objects.get(roll_number=roll_number)
@@ -221,6 +240,24 @@ class StudentViewSet(viewsets.ViewSet):
                         'student_contact_no' : student_contact_no,
                         'parents_contact_no' : parents_contact_no,
                         'parent_email_id' : parent_email_id,
+                        'year' : year,
+                        'session' : session,
+                        'course_1' : course_1,
+                        'course_2' : course_2,
+                        'course_3' : course_3,
+                        'course_4' : course_4,
+                        'course_5' : course_5,
+                        'course_6' : course_6,
+                        'course_7' : course_7,
+                        'course_8' : course_8,
+                        'course_9' : course_9,
+                        'course_10' : course_10,
+                        'course_11' : course_11,
+                        'course_12' : course_12,
+                        'course_13' : course_13,
+                        'course_14' : course_14,
+                        'course_15' : course_15,
+
                         
                     }, partial=True)
                 else:
@@ -234,6 +271,23 @@ class StudentViewSet(viewsets.ViewSet):
                         'student_contact_no' : student_contact_no,
                         'parents_contact_no' : parents_contact_no,
                         'parent_email_id' : parent_email_id,
+                        'year' : year,
+                        'session' : session,
+                        'course_1' : course_1,
+                        'course_2' : course_2,
+                        'course_3' : course_3,
+                        'course_4' : course_4,
+                        'course_5' : course_5,
+                        'course_6' : course_6,
+                        'course_7' : course_7,
+                        'course_8' : course_8,
+                        'course_9' : course_9,
+                        'course_10' : course_10,
+                        'course_11' : course_11,
+                        'course_12' : course_12,
+                        'course_13' : course_13,
+                        'course_14' : course_14,
+                        'course_15' : course_15,
                         
                     })
 
@@ -402,6 +456,225 @@ class CourseAllotmentViewSet(viewsets.ViewSet):
             return Response({"message": "Course Allotment not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
+class MarksViewSet(viewsets.ViewSet):
+    def list(self, request):
+        marks = models.Marks.objects.all()
+        serializer = serializers.MarksSerializer(marks, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, course_code=None, roll_number=None):
+        try:
+            mark_instance = models.Marks.objects.get(course_code=course_code, roll_number=roll_number)
+            serializer = serializers.MarksSerializer(mark_instance)
+            return Response(serializer.data)
+        except models.Marks.DoesNotExist:
+            return Response({"message": "Marks record not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    def create(self, request):
+        file = request.FILES.get('file')
+        if file:
+            
+            csv_data = csv.reader(TextIOWrapper(file, encoding='utf-8'))
+            
+            next(csv_data, None)
+
+            for row in csv_data:
+
+                year = row[0]
+                session = row[1]
+                branch = row[2]
+                course_code = row[3]
+                course_name = row[4]
+                student_name =row[5]
+                roll_number = row[6]
+                ise = row[7]
+                ia1 = row[8]
+                ia2 = row[9]
+                ia3 = row[10]
+                ca = row[11]
+                ese = row[12]
+                tw = row[13]
+                oral=row[14]
+
+                try:
+                    mark_instance = models.Marks.objects.get(course_code=course_code,roll_number=roll_number)
+                except models.Marks.DoesNotExist:
+                    mark_instance = None
+
+                if mark_instance:
+                    
+                    serializer = serializers.MarksSerializer(mark_instance, data={
+                        
+                        'year': year,
+                        'session': session,
+                        'branch': branch, 
+                        'course_name': course_name,
+                        'student_name': student_name,
+                        'ise': ise, 
+                        'ia1': ia1, 
+                        'ia2': ia2,
+                        'ia3': ia3, 
+                        'ca': ca,
+                        'ese': ese,
+                        'tw': tw, 
+                        'oral': oral,
+
+                           
+                    }, partial=True)
+                else:
+                    
+                    serializer = serializers.MarksSerializer(data={
+
+                        'year': year,
+                        'session': session,
+                        'branch': branch, 
+                        'course_code': course_code,
+                        'course_name': course_name,
+                        'student_name': student_name,
+                        'roll_number': roll_number,
+                        'ise': ise, 
+                        'ia1': ia1, 
+                        'ia2': ia2,
+                        'ia3': ia3, 
+                        'ca': ca,
+                        'ese': ese,
+                        'tw': tw, 
+                        'oral': oral,
+                        
+                    })
+
+                if serializer.is_valid():
+                    serializer.save()
+
+            return Response({"message": "CSV data added to Marks models successfully."}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message": "No file uploaded."}, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, course_code=None, roll_number=None):
+        try:
+            mark_instance = models.Marks.objects.get(course_code=course_code, roll_number=roll_number)
+            mark_instance.delete()
+            return Response({"message": "Marks data deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except models.Marks.DoesNotExist:
+            return Response({"message": "Marks data not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class AttendanceViewSet(viewsets.ViewSet):
+    def list(self, request):
+        attendance = models.Attendance.objects.all()
+        serializer = serializers.AttendanceSerializer(attendance, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, course_code=None, roll_number=None):
+        try:
+            attendance_instance = models.Attendance.objects.get(course_code=course_code, roll_number=roll_number)
+            serializer = serializers.AttendanceSerializer(attendance_instance)
+            return Response(serializer.data)
+        except models.Attendance.DoesNotExist:
+            return Response({"message": "Attendance record not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    def create(self, request):
+        file = request.FILES.get('file')
+        if file:
+            
+            csv_data = csv.reader(TextIOWrapper(file, encoding='utf-8'))
+            
+            next(csv_data, None)
+
+            for row in csv_data:
+
+
+                year = row[0]
+                session = row[1]
+                branch = row[2]
+                course_code = row[3]
+                course_name = row[4]
+                student_name =row[5]
+                roll_number = row[6]
+                january= row[7]
+                february=row[8]
+                march=row[9]
+                april=row[10]
+                may=row[11]
+                june=row[12]
+                july=row[13]
+                august=row[14]
+                september=row[15]
+                october=row[16]
+                november=row[17]
+                december=row[18]
+                
+
+                try:
+                    attendance_instance = models.Attendance.objects.get(course_code=course_code,roll_number=roll_number)
+                except models.Attendance.DoesNotExist:
+                    attendance_instance = None
+
+                if attendance_instance:
+                    
+                    serializer = serializers.AttendanceSerializer(attendance_instance, data={
+                        
+                        'year': year,
+                        'session': session,
+                        'branch': branch, 
+                        'course_name': course_name,
+                        'student_name': student_name,
+                        'january': january,
+                        'february':february,
+                        'march':march,
+                        'april':april,
+                        'may':may,
+                        'june':june,
+                        'july':july,
+                        'august':august,
+                        'september':september,
+                        'october':october,
+                        'november':november,
+                        'december':december,
+
+                           
+                    }, partial=True)
+                else:
+                    
+                    serializer = serializers.AttendanceSerializer(data={
+
+                        'year': year,
+                        'session': session,
+                        'branch': branch, 
+                        'course_code': course_code,
+                        'course_name': course_name,
+                        'student_name': student_name,
+                        'roll_number': roll_number,
+                        'january': january,
+                        'february':february,
+                        'march':march,
+                        'april':april,
+                        'may':may,
+                        'june':june,
+                        'july':july,
+                        'august':august,
+                        'september':september,
+                        'october':october,
+                        'november':november,
+                        'december':december,
+                        
+                    })
+
+                if serializer.is_valid():
+                    serializer.save()
+
+            return Response({"message": "CSV data added to Attendance models successfully."}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message": "No file uploaded."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def destroy(self, request, course_code=None, roll_number=None):
+        try:
+            attendance_instance = models.Attendance.objects.get(course_code=course_code, roll_number=roll_number)
+            attendance_instance.delete()
+            return Response({"message": "Attendance data deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except models.Attendance.DoesNotExist:
+            return Response({"message": "Attendance data not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 class DownloadCSV(APIView):
@@ -424,6 +697,12 @@ class DownloadCSV(APIView):
         elif model == 'CourseAllotment':
             queryset = models.CourseAllotment.objects.none()
             serializer_class = serializers.CourseAllotmentSerializer
+        elif model == 'Marks':
+            queryset = models.Marks.objects.none()
+            serializer_class = serializers.MarksSerializer
+        elif model == 'Attendance':
+            queryset = models.Attendance.objects.none()
+            serializer_class = serializers.AttendanceSerializer
         else:
             return Response({'message': 'Invalid model name.'}, status=400)
 
@@ -435,11 +714,48 @@ class DownloadCSV(APIView):
         field_names = ['dept', 'employee_code', 'faculty_abbreviation', 'faculty_name',
                        'faculty_email', 'experience', 'post', 'mobile_number'] if model == 'Faculty' else ['dept', 'employee_code', 'staff_abbreviation', 'staff_name',
                        'staff_email', 'experience', 'post', 'mobile_number'] if model == 'Staff' else ['student_branch', 'student_name', 'roll_number', 'email', 'proctor_abbreviation',
-                       'student_contact_no', 'parents_contact_no', 'parent_email_id'] if model == 'Student' else ['branch', 'course_code', 'course_name', 'sem',
-                       'scheme_name', 'credit', 'hours'] if model == 'Course' else ['course_code', 'course_name', 'faculty_abbreviation', 'staff_abbreviation'] if model == 'CourseAllotment' else []
+                       'student_contact_no', 'parents_contact_no', 'parent_email_id', 'year', 'session', 'course_1','course_2', 'course_3', 'course_4', 'course_5', 'course_6', 'course_7', 'course_8', 'course_9', 'course_10', 'course_11', 'course_12', 'course_13', 'course_14', 'course_15'] if model == 'Student' else ['branch', 'course_code', 'course_name', 'sem',
+                       'scheme_name', 'credit', 'hours'] if model == 'Course' else ['course_code', 'course_name', 'faculty_abbreviation', 'staff_abbreviation'] if model == 'CourseAllotment' else ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'ise', 'ia1', 'ia2', 'ia3', 'ca', 'ese', 'tw', 'oral'] if model == 'Marks' else ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'] if model == 'Attendance' else []
 
         writer = csv.DictWriter(response, fieldnames=field_names)
         writer.writeheader()
 
         return response
+
+
+class StudentAchievementViewSet(viewsets.ModelViewSet):
+
+    
+    def list(self, request):
+        achievements = models.StudentAchievement.objects.all()
+        serializer = serializers.StudentAchievementSerializer(achievements, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        try:
+            achievement_instance = models.StudentAchievement.objects.get(pk=pk)
+            serializer = serializers.StudentAchievementSerializer(achievement_instance)
+            return Response(serializer.data)
+        except models.StudentAchievement.DoesNotExist:
+            return Response({"message": "Student Achievement data not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    def create(self, request):
+        serializer = serializers.StudentAchievementSerializer(data=request.data)
+        if serializer.is_valid():
+            
+            upload_file = request.FILES.get('upload_file')
+            fs = FileSystemStorage()
+            filename = fs.save(upload_file.name, upload_file)
+            serializer.validated_data['upload_file'] = filename
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None):
+        try:
+            achievement_instance = models.StudentAchievement.objects.get(pk=pk)
+            achievement_instance.delete()
+            return Response({"message": "Student Achievement data deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except models.StudentAchievement.DoesNotExist:
+            return Response({"message": "Student Achievement data not found."}, status=status.HTTP_404_NOT_FOUND)
 

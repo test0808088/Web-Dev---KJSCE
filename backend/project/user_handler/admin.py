@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Faculty, Staff, Student, Course,CourseAllotment,StudentAchievement,AdminCredentials, SubAdminCredentials, AcademicYear
+from .models import Faculty, Staff, Student, Course,CourseAllotment,StudentAchievement,AdminCredentials, SubAdminCredentials, AcademicYear, Marks, Attendance
 
 class FacultyAdmin(admin.ModelAdmin):
     list_display = [
@@ -25,16 +25,10 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = [
         'student_branch', 'student_name', 'roll_number', 'email',
         'proctor_abbreviation', 'student_contact_no', 'parents_contact_no',
-        'parent_email_id', 'display_proctor_info'
+        'parent_email_id', 'year', 'session', 'course_1','course_2', 'course_3', 'course_4', 'course_5', 'course_6', 'course_7', 'course_8', 'course_9', 'course_10', 'course_11', 'course_12', 'course_13', 'course_14', 'course_15'
     ]
 
-    def display_proctor_info(self, obj):
-        return f"{obj.proctor_abbreviation.dept} - {obj.proctor_abbreviation.faculty_name}"
-
-    display_proctor_info.short_description = 'Proctor Information'
-
     
-
 class CourseAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Course._meta.get_fields()]
 
@@ -56,6 +50,13 @@ class AcademicYearAdmin(admin.ModelAdmin):
     list_display = [field.name for field in AcademicYear._meta.get_fields()]
 
 
+class MarksAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Marks._meta.get_fields()]
+
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Attendance._meta.get_fields()]
+
+
 
 admin.site.register(Faculty,FacultyAdmin)
 admin.site.register(Staff,StaffAdmin)
@@ -66,3 +67,5 @@ admin.site.register(StudentAchievement,StudentAchievementAdmin)
 admin.site.register(AdminCredentials,AdminCredentialsAdmin)
 admin.site.register(SubAdminCredentials,SubAdminCredentialsAdmin)
 admin.site.register(AcademicYear,AcademicYearAdmin)
+admin.site.register(Marks,MarksAdmin)
+admin.site.register(Attendance,AttendanceAdmin)
