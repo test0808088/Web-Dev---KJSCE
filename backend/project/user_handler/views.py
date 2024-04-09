@@ -6,8 +6,10 @@ from rest_framework.response import Response
 import csv
 from . import serializers
 from . import models
+from rest_framework import generics
 from rest_framework.views import APIView
 from django.core.files.storage import FileSystemStorage
+from django.utils import timezone
 
 class FacultyViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -471,6 +473,12 @@ class MarksViewSet(viewsets.ViewSet):
             return Response({"message": "Marks record not found."}, status=status.HTTP_404_NOT_FOUND)
 
     def create(self, request):
+        exam = request.data.get('exam') 
+
+        if not exam:
+            return Response({'error': 'Exam information is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
         file = request.FILES.get('file')
         if file:
             
@@ -487,19 +495,13 @@ class MarksViewSet(viewsets.ViewSet):
                 course_name = row[4]
                 student_name =row[5]
                 roll_number = row[6]
-                ise = row[7]
-                ia1 = row[8]
-                ia2 = row[9]
-                ia3 = row[10]
-                ca = row[11]
-                ese = row[12]
-                tw = row[13]
-                oral=row[14]
+                marks_value = row[7]
 
                 try:
                     mark_instance = models.Marks.objects.get(course_code=course_code,roll_number=roll_number)
                 except models.Marks.DoesNotExist:
                     mark_instance = None
+
 
                 if mark_instance:
                     
@@ -510,14 +512,8 @@ class MarksViewSet(viewsets.ViewSet):
                         'branch': branch, 
                         'course_name': course_name,
                         'student_name': student_name,
-                        'ise': ise, 
-                        'ia1': ia1, 
-                        'ia2': ia2,
-                        'ia3': ia3, 
-                        'ca': ca,
-                        'ese': ese,
-                        'tw': tw, 
-                        'oral': oral,
+                        exam: marks_value,
+                        
 
                            
                     }, partial=True)
@@ -532,14 +528,8 @@ class MarksViewSet(viewsets.ViewSet):
                         'course_name': course_name,
                         'student_name': student_name,
                         'roll_number': roll_number,
-                        'ise': ise, 
-                        'ia1': ia1, 
-                        'ia2': ia2,
-                        'ia3': ia3, 
-                        'ca': ca,
-                        'ese': ese,
-                        'tw': tw, 
-                        'oral': oral,
+                        exam: marks_value,
+                        
                         
                     })
 
@@ -558,6 +548,82 @@ class MarksViewSet(viewsets.ViewSet):
         except models.Marks.DoesNotExist:
             return Response({"message": "Marks data not found."}, status=status.HTTP_404_NOT_FOUND)
 
+    def delete_exam_marks(self, request, exam, course_code=None, roll_number=None):
+        try:
+            mark_instance = models.Marks.objects.get(course_code=course_code, roll_number=roll_number)
+            
+            setattr(mark_instance, exam, None)
+            mark_instance.save()
+            return Response({"message": f"{exam} marks deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except models.Marks.DoesNotExist:
+            return Response({"message": "Marks data not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class DownloadExamCSV(APIView):
+    def get(self, request, exam, course_code):
+        
+        marks = models.Marks.objects.filter(course_code=course_code)
+
+        headers = ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'marks']
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{exam}_marks_{course_code}_{timezone.now().strftime("%Y%m%d%H%M%S")}.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(headers)
+        for mark in marks:
+            writer.writerow([
+                mark.year,
+                mark.session,
+                mark.branch,
+                mark.course_code,
+                mark.course_name,
+                mark.student_name,
+                mark.roll_number,
+                getattr(mark, exam)
+                
+            ])
+
+        return response
+
+
+
+class DownloadAllExamCSV(APIView):
+    def get(self, request, course_code):
+        
+        marks = models.Marks.objects.filter(course_code=course_code)
+
+        headers = ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'ise', 'ia1', 'ia2', 'ia3','ca','ese','tw', 'oral']
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="marks_{course_code}_{timezone.now().strftime("%Y%m%d%H%M%S")}.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(headers)
+        for mark in marks:
+            writer.writerow([
+                mark.year,
+                mark.session,
+                mark.branch,
+                mark.course_code,
+                mark.course_name,
+                mark.student_name,
+                mark.roll_number,
+                mark.ise,
+                mark.ia1,
+                mark.ia2,
+                mark.ia3,
+                mark.ca,
+                mark.ese,
+                mark.tw,
+                mark.oral,
+                
+                
+            ])
+
+        return response
+
 
 class AttendanceViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -574,6 +640,12 @@ class AttendanceViewSet(viewsets.ViewSet):
             return Response({"message": "Attendance record not found."}, status=status.HTTP_404_NOT_FOUND)
 
     def create(self, request):
+        month = request.data.get('month') 
+
+        if not month:
+            return Response({'error': 'Month information is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
         file = request.FILES.get('file')
         if file:
             
@@ -591,18 +663,7 @@ class AttendanceViewSet(viewsets.ViewSet):
                 course_name = row[4]
                 student_name =row[5]
                 roll_number = row[6]
-                january= row[7]
-                february=row[8]
-                march=row[9]
-                april=row[10]
-                may=row[11]
-                june=row[12]
-                july=row[13]
-                august=row[14]
-                september=row[15]
-                october=row[16]
-                november=row[17]
-                december=row[18]
+                month_attendance_value = row[7]
                 
 
                 try:
@@ -619,18 +680,8 @@ class AttendanceViewSet(viewsets.ViewSet):
                         'branch': branch, 
                         'course_name': course_name,
                         'student_name': student_name,
-                        'january': january,
-                        'february':february,
-                        'march':march,
-                        'april':april,
-                        'may':may,
-                        'june':june,
-                        'july':july,
-                        'august':august,
-                        'september':september,
-                        'october':october,
-                        'november':november,
-                        'december':december,
+                        month: month_attendance_value,
+                        
 
                            
                     }, partial=True)
@@ -645,19 +696,8 @@ class AttendanceViewSet(viewsets.ViewSet):
                         'course_name': course_name,
                         'student_name': student_name,
                         'roll_number': roll_number,
-                        'january': january,
-                        'february':february,
-                        'march':march,
-                        'april':april,
-                        'may':may,
-                        'june':june,
-                        'july':july,
-                        'august':august,
-                        'september':september,
-                        'october':october,
-                        'november':november,
-                        'december':december,
-                        
+                        month: month_attendance_value,
+                          
                     })
 
                 if serializer.is_valid():
@@ -675,6 +715,89 @@ class AttendanceViewSet(viewsets.ViewSet):
             return Response({"message": "Attendance data deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
         except models.Attendance.DoesNotExist:
             return Response({"message": "Attendance data not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete_month_attendance(self, request, month, course_code=None, roll_number=None):
+        try:
+            attendance_instance = models.Attendance.objects.get(course_code=course_code, roll_number=roll_number)
+            setattr(attendance_instance, month, None)
+            attendance_instance.save()
+            return Response({"message": f"{month} attendance deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        except models.Marks.DoesNotExist:
+            return Response({"message": "Attendance data not found."}, status=status.HTTP_404_NOT_FOUND)
+
+
+class DownloadMonthAttendanceCSV(APIView):
+    def get(self, request, month, course_code):
+        
+        attendance_instance = models.Attendance.objects.filter(course_code=course_code)
+
+        headers = ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'month']
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{month}_attendance_{course_code}_{timezone.now().strftime("%Y%m%d%H%M%S")}.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(headers)
+        for attendance in attendance_instance:
+            writer.writerow([
+                attendance.year,
+                attendance.session,
+                attendance.branch,
+                attendance.course_code,
+                attendance.course_name,
+                attendance.student_name,
+                attendance.roll_number,
+                getattr(attendance, month)
+                
+            ])
+
+        return response
+
+class DownloadAllMonthAttendanceCSV(APIView):
+    def get(self, request, course_code):
+        
+        attendance_instance = models.Attendance.objects.filter(course_code=course_code)
+
+        headers = ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'january', 'february', 'march', 'april','may','june','july', 'august', 'september', 'october', 'november','december']
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="attendance_{course_code}_{timezone.now().strftime("%Y%m%d%H%M%S")}.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(headers)
+        for attendance in attendance_instance:
+            writer.writerow([
+                attendance.year,
+                attendance.session,
+                attendance.branch,
+                attendance.course_code,
+                attendance.course_name,
+                attendance.student_name,
+                attendance.roll_number,
+                attendance.january,
+                attendance.february,
+                attendance.march,
+                attendance.april,
+                attendance.may,
+                attendance.june,
+                attendance.july,
+                attendance.august,
+                attendance.september,
+                attendance.october,
+                attendance.november,
+                attendance.december,
+                  
+            ])
+
+        return response
+
+
+class StudentByProctorAbbreviation(generics.ListAPIView):
+    serializer_class = serializers.StudentSerializer
+
+    def get_queryset(self):
+        proctor_abbreviation = self.kwargs['abbreviation']
+        return models.Student.objects.filter(proctor_abbreviation__faculty_abbreviation=proctor_abbreviation)
 
 
 class DownloadCSV(APIView):
@@ -709,13 +832,14 @@ class DownloadCSV(APIView):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(model)
 
+
         serializer = serializer_class(queryset, many=True)
 
         field_names = ['dept', 'employee_code', 'faculty_abbreviation', 'faculty_name',
                        'faculty_email', 'experience', 'post', 'mobile_number'] if model == 'Faculty' else ['dept', 'employee_code', 'staff_abbreviation', 'staff_name',
                        'staff_email', 'experience', 'post', 'mobile_number'] if model == 'Staff' else ['student_branch', 'student_name', 'roll_number', 'email', 'proctor_abbreviation',
                        'student_contact_no', 'parents_contact_no', 'parent_email_id', 'year', 'session', 'course_1','course_2', 'course_3', 'course_4', 'course_5', 'course_6', 'course_7', 'course_8', 'course_9', 'course_10', 'course_11', 'course_12', 'course_13', 'course_14', 'course_15'] if model == 'Student' else ['branch', 'course_code', 'course_name', 'sem',
-                       'scheme_name', 'credit', 'hours'] if model == 'Course' else ['course_code', 'course_name', 'faculty_abbreviation', 'staff_abbreviation'] if model == 'CourseAllotment' else ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'ise', 'ia1', 'ia2', 'ia3', 'ca', 'ese', 'tw', 'oral'] if model == 'Marks' else ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'] if model == 'Attendance' else []
+                       'scheme_name', 'credit', 'hours'] if model == 'Course' else ['course_code', 'course_name', 'faculty_abbreviation', 'staff_abbreviation'] if model == 'CourseAllotment' else ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'marks'] if model == 'Marks' else ['year', 'session', 'branch', 'course_code', 'course_name', 'student_name', 'roll_number', 'month'] if model == 'Attendance' else []
 
         writer = csv.DictWriter(response, fieldnames=field_names)
         writer.writeheader()
